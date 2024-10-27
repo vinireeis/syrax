@@ -11,6 +11,8 @@ fastapi = "^0.115.3"
 python-decouple = "^3.8"
 loguru = "^0.7.2"
 witch-doctor = "^1.2.0"
+pyfiglet = "^1.0.2"
+uvicorn = "^0.32.0"
 
 
 [tool.poetry.group.dev.dependencies]

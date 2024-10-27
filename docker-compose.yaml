@@ -8,7 +8,7 @@ services:
     environment:      
       POSTGRES_PASSWORD: "rootpassword"      
       POSTGRES_USER: "postgres"      
-      POSTGRES_DB: "syrax_bank"    
+      POSTGRESQL_DATABASE: "syrax_bank"
     ports:      
       - "5432:5432"    
     networks:      
