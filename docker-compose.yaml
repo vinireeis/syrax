@@ -8,7 +8,7 @@ services:
     environment:      
       POSTGRES_PASSWORD: "rootpassword"      
       POSTGRES_USER: "postgres"      
-      POSTGRESQL_DB: "bank_accounts"
+      POSTGRES_DB: "bank_accounts"
     ports:      
       - "5432:5432"    
     networks:      

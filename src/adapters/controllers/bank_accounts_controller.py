@@ -12,32 +12,38 @@ from src.use_cases.data_types.requests.checking_account.create_new_account_reque
 from src.use_cases.data_types.requests.checking_account.deposit_request import (
     TransferBetweenAccountsRequest,
 )
-from src.use_cases.data_types.responses.checking_account.create_new_account_response import (
+from src.use_cases.data_types.responses.bank_account.create_new_account_response import (
     CreateNewAccountResponse,
 )
-from src.use_cases.data_types.responses.checking_account.deposit_response import (
+from src.use_cases.data_types.responses.bank_account.deposit_response import (
     DepositResponse,
 )
-from src.use_cases.data_types.responses.checking_account.get_balance_response import (
+from src.use_cases.data_types.responses.bank_account.get_balance_response import (
     GetBalanceResponse,
 )
-from src.use_cases.data_types.responses.checking_account.list_accounts_response import (
+from src.use_cases.data_types.responses.bank_account.list_accounts_response import (
     ListAccountsResponse,
 )
-from src.use_cases.data_types.responses.checking_account.list_transactions_response import (
+from src.use_cases.data_types.responses.bank_account.list_transactions_response import (
     ListTransactionsByAccountResponse,
 )
-from src.use_cases.data_types.responses.checking_account.transfer_between_accounts_response import (
+from src.use_cases.data_types.responses.bank_account.transfer_between_accounts_response import (
     TransferBetweenAccountsResponse,
 )
-from src.use_cases.data_types.responses.checking_account.withdraw_response import (
+from src.use_cases.data_types.responses.bank_account.withdraw_response import (
     WithdrawResponse,
+)
+from src.use_cases.ports.extensions.bank_accounts.i_bank_accounts_extension import (
+    IBankAccountsExtension,
 )
 from src.use_cases.ports.extensions.bank_accounts.i_create_new_account_extension import (
     ICreateNewAccountExtension,
 )
 from src.use_cases.ports.use_cases.bank_accounts.i_create_new_account_use_case import (
     ICreateNewAccountUseCase,
+)
+from src.use_cases.ports.use_cases.bank_accounts.i_list_accounts_use_case import (
+    IListAccountsUseCase,
 )
 
 
@@ -52,31 +58,24 @@ class BankAccountsAccountsController(IBankAccountsController):
         create_new_account_extension: ICreateNewAccountExtension,
     ) -> CreateNewAccountResponse:
 
-        use_case_response = await create_new_account_use_case.create_new_account(
-            request=request
-        )
+        dto = await create_new_account_use_case.create_new_account(request=request)
 
-        response = create_new_account_extension.from_dto_to_response(
-            dto=use_case_response
-        )
+        response = create_new_account_extension.from_dto_to_response(dto=dto)
 
         return response
 
     @classmethod
     @controller_error_handler
     @WitchDoctor.injection
-    async def list_accounts(cls) -> ListAccountsResponse:
-        request = create_bank_account_extension.from_router_request_to_request(
-            balance=balance,
-        )
+    async def list_accounts(
+        cls,
+        list_accounts_use_case: IListAccountsUseCase,
+        bank_accounts_extension: IBankAccountsExtension,
+    ) -> ListAccountsResponse:
 
-        use_case_response = await create_bank_account_use_case.get_shortlist_by_company_id_and_job_opportunity_id(
-            request=request
-        )
+        dtos = await list_accounts_use_case.list_accounts()
 
-        response = create_bank_account_extension.from_dto_to_response(
-            dto=use_case_response
-        )
+        response = bank_accounts_extension.from_dto_list_to_response(dtos=dtos)
 
         return response
 

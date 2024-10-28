@@ -3,12 +3,12 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from src.externals.ports.infrastructures.i_http_config_infrastructure import (
-    IHttpServerConfigStructure,
+    IHttpServerConfigInfrastructure,
 )
 from src.externals.routers.syrax_bank_router import SyraxBankRouter
 
 
-class FastApiHttpServerConfigInfrastructure(IHttpServerConfigStructure):
+class FastApiHttpServerConfigInfrastructure(IHttpServerConfigInfrastructure):
     def __init__(self):
         self.__root = config("ROOT_PATH")
         self.__app = FastAPI(

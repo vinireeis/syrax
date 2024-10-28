@@ -10,6 +10,9 @@ from src.adapters.ports.infrastructures.postgresql.i_postgresql_connection_pool 
 from src.adapters.ports.infrastructures.postgresql.i_postgresql_infrastructure import (
     IPostgresqlInfrastructure,
 )
+from src.adapters.repositories.exceptions.repository_exceptions import (
+    FailToInsertInformationException,
+)
 from src.adapters.repositories.postgresql import repository_insertion_error_handler
 from src.domain.entities.bank_account_entity import BankAccountEntity
 from src.domain.models.bank_account_model import BankAccountModel
@@ -35,8 +38,8 @@ class BankAccountsRepository(IBankAccountsRepository):
         BankAccountsRepository.__postgresql_infrastructure = postgresql_infrastructure
         BankAccountsRepository.__postgresql_connection_pool = (
             BankAccountsRepository.__postgresql_infrastructure.get_pool(
-                uri=config("POSTGRESQL_STRING_CONNECTION"),
-                database=config("POSTGRESQL_DATABASE"),
+                uri=config("POSTGRES_STRING_CONNECTION"),
+                database=config("POSTGRES_DB"),
             )
         )
         BankAccountsRepository.__bank_accounts_extension = bank_accounts_extension
@@ -45,25 +48,20 @@ class BankAccountsRepository(IBankAccountsRepository):
     @repository_insertion_error_handler
     async def insert_new_account(cls, bank_account_entity: BankAccountEntity):
 
-        async with cls.__postgresql_connection_pool.get_connection() as connection, connection.cursor(
-            row_factory=dict_row
-        ) as cursor:
+        async with cls.__postgresql_connection_pool.get_connection() as connection, connection.cursor() as cursor:
             cursor: AsyncCursor
-            query = SQL(
-                obj="""
-                INSERT INTO Accounts (account_id) VALUES %(account_id)s
-                    """
-            )
+            query = SQL(obj="INSERT INTO Accounts (account_id) VALUES (%s)")
 
             prepared_statement = await cursor.execute(
                 query=query,
-                params=dict(account_id=bank_account_entity.account_id),
+                params=(bank_account_entity.account_id,),
                 prepare=True,
             )
 
-            print(prepared_statement)
-
-            return True
+            if not prepared_statement.rowcount:
+                raise FailToInsertInformationException(
+                    message="Fail to insert new account.",
+                )
 
     @classmethod
     @repository_insertion_error_handler
@@ -73,15 +71,10 @@ class BankAccountsRepository(IBankAccountsRepository):
         ) as cursor:
             cursor: AsyncCursor
 
-            query = SQL(
-                obj="""
-                        SELECT * FROM Accounts
-                                """
-            )
-
+            query = SQL(obj="SELECT * FROM Accounts")
             prepared_statement = await cursor.execute(query=query, prepare=True)
 
-            if result_list := await prepared_statement.fetchone():
+            if result_list := await prepared_statement.fetchall():
                 bank_account_models = cls.__bank_accounts_extension.from_database_result_list_to_model_list(
                     result_list=result_list
                 )

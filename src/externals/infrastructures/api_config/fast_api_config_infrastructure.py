@@ -4,7 +4,7 @@ from src.externals.ports.infrastructures.i_api_config_infrastructure import (
     IApiConfigInfrastructure,
 )
 from src.externals.ports.infrastructures.i_http_config_infrastructure import (
-    IHttpServerConfigStructure,
+    IHttpServerConfigInfrastructure,
 )
 from src.externals.ports.infrastructures.i_ioc_container_config_infrastructure import (
     IIocContainerConfigInfrastructure,
@@ -17,7 +17,7 @@ from src.externals.ports.infrastructures.i_logs_config_infrastructure import (
 class FastAPIConfigInfrastructure(IApiConfigInfrastructure):
     def __init__(
         self,
-        http_server_config: IHttpServerConfigStructure,
+        http_server_config: IHttpServerConfigInfrastructure,
         ioc_container_config: IIocContainerConfigInfrastructure,
         logs_config: ILogsConfigInfrastructure,
     ):

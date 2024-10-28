@@ -6,10 +6,8 @@ from src.use_cases.data_types.requests.checking_account.create_new_account_reque
 )
 
 
-class ICreateNewAccountUseCase(ABC):
+class IListAccountsUseCase(ABC):
 
     @abstractmethod
-    async def create_new_account(
-        self, request: CreateNewAccountRequest
-    ) -> BankAccountDto:
+    async def list_accounts(self) -> list[BankAccountDto]:
         pass

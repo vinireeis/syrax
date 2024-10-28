@@ -5,25 +5,25 @@ from pydantic import UUID4
 from src.use_cases.data_types.requests.checking_account.create_new_account_request import (
     CreateNewAccountRequest,
 )
-from src.use_cases.data_types.responses.checking_account.create_new_account_response import (
+from src.use_cases.data_types.responses.bank_account.create_new_account_response import (
     CreateNewAccountResponse,
 )
-from src.use_cases.data_types.responses.checking_account.deposit_response import (
+from src.use_cases.data_types.responses.bank_account.deposit_response import (
     DepositResponse,
 )
-from src.use_cases.data_types.responses.checking_account.get_balance_response import (
+from src.use_cases.data_types.responses.bank_account.get_balance_response import (
     GetBalanceResponse,
 )
-from src.use_cases.data_types.responses.checking_account.list_transactions_response import (
+from src.use_cases.data_types.responses.bank_account.list_transactions_response import (
     ListTransactionsByAccountResponse,
 )
-from src.use_cases.data_types.responses.checking_account.list_accounts_response import (
+from src.use_cases.data_types.responses.bank_account.list_accounts_response import (
     ListAccountsResponse,
 )
-from src.use_cases.data_types.responses.checking_account.transfer_between_accounts_response import (
+from src.use_cases.data_types.responses.bank_account.transfer_between_accounts_response import (
     TransferBetweenAccountsResponse,
 )
-from src.use_cases.data_types.responses.checking_account.withdraw_response import (
+from src.use_cases.data_types.responses.bank_account.withdraw_response import (
     WithdrawResponse,
 )
 

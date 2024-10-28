@@ -1,7 +1,41 @@
-from witch_doctor import WitchDoctor
+from witch_doctor import WitchDoctor, InjectionType
 
+from src.adapters.extensions.bank_accounts.bank_accounts_extension import (
+    BankAccountsExtension,
+)
+from src.adapters.extensions.bank_accounts.create_new_account_extension import (
+    CreateNewAccountExtension,
+)
+from src.adapters.ports.infrastructures.postgresql.i_postgresql_infrastructure import (
+    IPostgresqlInfrastructure,
+)
+from src.adapters.repositories.postgresql.bank_accounts_repository import (
+    BankAccountsRepository,
+)
+from src.externals.infrastructures.postgre_sql.postgresql_infrastructure import (
+    PostgresqlInfrastructure,
+)
 from src.externals.ports.infrastructures.i_ioc_container_config_infrastructure import (
     IIocContainerConfigInfrastructure,
+)
+from src.use_cases.bank_accounts.create_new_account_use_case import (
+    CreateNewAccountUseCase,
+)
+from src.use_cases.bank_accounts.list_accounts_use_case import ListAccountsUseCase
+from src.use_cases.ports.extensions.bank_accounts.i_bank_accounts_extension import (
+    IBankAccountsExtension,
+)
+from src.use_cases.ports.extensions.bank_accounts.i_create_new_account_extension import (
+    ICreateNewAccountExtension,
+)
+from src.use_cases.ports.repositories.postrgresql.i_bank_accounts_repository import (
+    IBankAccountsRepository,
+)
+from src.use_cases.ports.use_cases.bank_accounts.i_create_new_account_use_case import (
+    ICreateNewAccountUseCase,
+)
+from src.use_cases.ports.use_cases.bank_accounts.i_list_accounts_use_case import (
+    IListAccountsUseCase,
 )
 
 
@@ -10,11 +44,22 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
     def __create_use_cases_container(cls):
         use_cases_container = WitchDoctor.container("use_cases")
 
+        use_cases_container(
+            ICreateNewAccountUseCase, CreateNewAccountUseCase, InjectionType.SINGLETON
+        )
+        use_cases_container(
+            IListAccountsUseCase, ListAccountsUseCase, InjectionType.SINGLETON
+        )
+
         return use_cases_container
 
     @classmethod
     def __create_infrastructures_container(cls):
         infrastructures_container = WitchDoctor.container("infrastructures")
+
+        infrastructures_container(
+            IPostgresqlInfrastructure, PostgresqlInfrastructure, InjectionType.SINGLETON
+        )
 
         return infrastructures_container
 
@@ -22,11 +67,24 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
     def __create_repositories_container(cls):
         repositories_container = WitchDoctor.container("repositories")
 
+        repositories_container(
+            IBankAccountsRepository, BankAccountsRepository, InjectionType.SINGLETON
+        )
+
         return repositories_container
 
     @classmethod
     def __create_extensions_container(cls):
         extensions_container = WitchDoctor.container("extensions")
+
+        extensions_container(
+            IBankAccountsExtension, BankAccountsExtension, InjectionType.SINGLETON
+        )
+        extensions_container(
+            ICreateNewAccountExtension,
+            CreateNewAccountExtension,
+            InjectionType.SINGLETON,
+        )
 
         return extensions_container
 
