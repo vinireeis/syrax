@@ -4,9 +4,14 @@ from src.adapters.extensions.exceptions.extension_exceptions import (
 from src.domain.models.transaction_model import TransactionModel
 from src.use_cases.data_types.dtos.bank_account_dto import BankAccountDto
 from src.use_cases.data_types.dtos.transaction_dto import TransactionDto
+from src.use_cases.data_types.responses.bank_account.base import BaseTransactionPayload
 from src.use_cases.data_types.responses.bank_account.list_accounts_response import (
     ListAccountsResponse,
     AccountPayload,
+)
+from src.use_cases.data_types.responses.bank_account.list_transactions_response import (
+    ListTransactionsByAccountResponse,
+    ListTransactionsPayload,
 )
 from src.use_cases.ports.extensions.bank_accounts.i_transactions_extension import (
     ITransactionsExtension,
@@ -48,7 +53,7 @@ class TransactionsExtension(ITransactionsExtension):
                 operation=model.operation,
                 cash_flow=model.cash_flow,
                 reference_id=model.reference_id,
-                transaction_date=model.transaction_date,
+                transaction_datetime=model.transaction_datetime,
             )
             return transaction_model
 
@@ -70,18 +75,25 @@ class TransactionsExtension(ITransactionsExtension):
         return transaction_models
 
     @staticmethod
-    def from_dto_list_to_response(dtos: list[BankAccountDto]) -> ListAccountsResponse:
+    def from_dto_list_to_response(
+        dtos: list[TransactionDto],
+    ) -> ListTransactionsByAccountResponse:
         try:
-            payload = [
-                AccountPayload(
+            base_transaction_payloads = [
+                BaseTransactionPayload(
                     account_id=dto.account_id,
-                    balance_end_of_day=dto.balance,
-                    created_at=dto.created_at,
+                    transaction_id=dto.transaction_id,
+                    amount=dto.amount,
+                    operation=dto.operation,
+                    cash_flow=dto.cash_flow,
+                    transaction_datetime=dto.transaction_datetime,
                 )
                 for dto in dtos
             ]
 
-            response = ListAccountsResponse(
+            payload = ListTransactionsPayload(transactions=base_transaction_payloads)
+
+            response = ListTransactionsByAccountResponse(
                 payload=payload,
                 status=True,
             )

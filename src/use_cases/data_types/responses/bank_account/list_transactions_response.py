@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from src.use_cases.data_types.responses.bank_account.base_payloads import (
+from src.use_cases.data_types.responses.bank_account.base.base_payloads import (
     BaseTransactionPayload,
 )
 from src.use_cases.data_types.responses.base_api_response import BaseApiResponse

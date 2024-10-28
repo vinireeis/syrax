@@ -25,6 +25,9 @@ from src.use_cases.create_new_account_use_case import (
     CreateNewAccountUseCase,
 )
 from src.use_cases.list_accounts_use_case import ListAccountsUseCase
+from src.use_cases.list_transactions_by_account_use_case import (
+    ListTransactionsByAccountUseCase,
+)
 from src.use_cases.ports.extensions.bank_accounts.i_bank_accounts_extension import (
     IBankAccountsExtension,
 )
@@ -43,6 +46,9 @@ from src.use_cases.ports.use_cases.bank_accounts.i_create_new_account_use_case i
 from src.use_cases.ports.use_cases.bank_accounts.i_list_accounts_use_case import (
     IListAccountsUseCase,
 )
+from src.use_cases.ports.use_cases.bank_accounts.i_list_transactions_by_account_use_case import (
+    IListTransactionsByAccountUseCase,
+)
 
 
 class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure):
@@ -55,6 +61,11 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
         )
         use_cases_container(
             IListAccountsUseCase, ListAccountsUseCase, InjectionType.SINGLETON
+        )
+        use_cases_container(
+            IListTransactionsByAccountUseCase,
+            ListTransactionsByAccountUseCase,
+            InjectionType.SINGLETON,
         )
 
         return use_cases_container

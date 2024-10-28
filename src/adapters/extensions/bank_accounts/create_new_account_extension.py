@@ -1,12 +1,10 @@
-from abc import abstractmethod
-
 from src.adapters.extensions.exceptions.extension_exceptions import (
     ExtensionsUnexpectedException,
 )
 from src.domain.entities.bank_account_entity import BankAccountEntity
 from src.domain.entities.transaction_entity import TransactionEntity
 from src.domain.enums.cash_flow.enum import CashFlowEnum
-from src.domain.enums.operations.enum import AccountOperationsEnum
+from src.domain.enums.operations.enum import AccountOperationEnum
 from src.use_cases.data_types.dtos.bank_account_dto import BankAccountDto
 from src.use_cases.data_types.requests.bank_accounts.create_new_account_request import (
     CreateNewAccountRequest,
@@ -77,12 +75,10 @@ class CreateNewAccountExtension(ICreateNewAccountExtension):
         try:
             transaction_entity = TransactionEntity(
                 account_id=bank_account_entity.account_id,
-                operation=AccountOperationsEnum.DEPOSIT,
+                operation=AccountOperationEnum.DEPOSIT,
                 cash_flow=CashFlowEnum.CASH_IN,
                 amount=bank_account_entity.balance_float_type,
             )
-
-            transaction_entity._generate_transaction_id()
 
             return transaction_entity
 

@@ -1,5 +1,5 @@
 from decouple import config
-from psycopg import AsyncCursor
+from psycopg import AsyncCursor, AsyncConnection
 from psycopg.rows import dict_row
 from pydantic import UUID4
 from witch_doctor import WitchDoctor
@@ -60,7 +60,9 @@ class BankAccountsRepository(IBankAccountsRepository):
     @repository_insertion_error_handler
     async def insert_new_account(cls, bank_account_entity: BankAccountEntity):
 
-        async with cls.__postgresql_connection_pool.get_connection() as connection, connection.cursor() as cursor:
+        async with cls.__postgresql_connection_pool.get_connection() as connection, connection.cursor(
+            row_factory=dict_row
+        ) as cursor:
             cursor: AsyncCursor
             query = SQL(
                 obj="INSERT INTO Accounts (account_id, balance) VALUES (%(account_id)s, %(balance)s)"
@@ -68,7 +70,10 @@ class BankAccountsRepository(IBankAccountsRepository):
 
             prepared_statement = await cursor.execute(
                 query=query,
-                params=(bank_account_entity.account_id, bank_account_entity.balance),
+                params=dict(
+                    account_id=bank_account_entity.account_id,
+                    balance=bank_account_entity.balance,
+                ),
                 prepare=True,
             )
 
@@ -103,12 +108,12 @@ class BankAccountsRepository(IBankAccountsRepository):
             row_factory=dict_row
         ) as cursor:
             cursor: AsyncCursor
-            data_to_insert = transaction_entity._to_insert()
+            data_to_insert = transaction_entity._transaction_document_to_insert()
 
             query = SQL(
                 obj="""
-                INSERT INTO Transactions (transaction_id, account_id, amount, operation, cash_flow, reference_id) 
-                VALUES (%(transaction_id)s, (%(account_id)s, %(amount)s, %(operation)s, %(cash_flow)s, %(reference_id)s),
+                INSERT INTO Transactions (account_id, amount, operation, cash_flow, reference_id) 
+                VALUES (%(account_id)s, %(amount)s, %(operation)s, %(cash_flow)s, %(reference_id)s)
                     """
             )
 
@@ -124,6 +129,7 @@ class BankAccountsRepository(IBankAccountsRepository):
                 )
 
     @classmethod
+    @repository_retrieving_error_handler
     async def get_transactions_by_account_id(
         cls, account_id: UUID4
     ) -> list[TransactionModel]:
@@ -147,3 +153,35 @@ class BankAccountsRepository(IBankAccountsRepository):
             )
 
             return transaction_models
+
+    @classmethod
+    @repository_retrieving_error_handler
+    async def insert_amount_by_account_id(
+        cls, account_id: UUID4, transaction_entity: TransactionEntity
+    ):
+        operator = transaction_entity.cash_flow_operator.value
+        query_lock = SQL(
+            """ SELECT balance FROM Accounts WHERE account_id = %(account_id)s FOR UPDATE """
+        )
+        query_update = SQL(
+            f""" UPDATE Accounts SET balance = balance {operator} %(amount)s WHERE account_id = %(account_id)s """
+        )
+        amount_to_insert = transaction_entity._amount_document_to_insert()
+
+        async with cls.__postgresql_connection_pool.get_connection() as connection:
+            async with connection.transaction():
+                async with connection.cursor() as cursor:
+
+                    await cursor.execute(
+                        query=query_lock,
+                        params=dict(account_id=account_id),
+                        prepare=True,
+                    )
+                    update_prepared_statement = await cursor.execute(
+                        query=query_update, params=amount_to_insert, prepare=True
+                    )
+
+                    if not update_prepared_statement.rowcount:
+                        raise FailToInsertInformationException(
+                            message="Fail to insert new transaction.",
+                        )

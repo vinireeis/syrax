@@ -16,8 +16,10 @@ from src.use_cases.data_types.dtos.bank_account_dto import BankAccountDto
 from src.use_cases.data_types.requests.bank_accounts.create_new_account_request import (
     CreateNewAccountRequest,
 )
+from src.use_cases.exceptions.use_case_base_exception import UseCaseBaseException
 from src.use_cases.exceptions.use_case_exceptions import (
     UnableToCreateNewAccountException,
+    UseCaseUnexpectedException,
 )
 
 from src.use_cases.ports.extensions.bank_accounts.i_create_new_account_extension import (
@@ -46,11 +48,23 @@ class CreateNewAccountUseCase(ICreateNewAccountUseCase):
         self,
         request: CreateNewAccountRequest,
     ) -> BankAccountDto:
-        bank_account_entity = self.__create_bank_account_entity(request=request)
-        await self.__insert_new_account(bank_account_entity=bank_account_entity)
-        dto = self.__create_dto(bank_account_entity=bank_account_entity)
+        try:
+            bank_account_entity = self.__create_bank_account_entity(request=request)
+            await self.__insert_new_account(bank_account_entity=bank_account_entity)
+            await self.__insert_initial_balance_transaction(
+                bank_account_entity=bank_account_entity
+            )
+            dto = self.__create_dto(bank_account_entity=bank_account_entity)
+            return dto
 
-        return dto
+        except UseCaseBaseException as original_exceptiom:
+            raise original_exceptiom
+
+        except Exception as original_exception:
+            raise UseCaseUnexpectedException(
+                message="Unexpected use case exception error.",
+                original_error=original_exception,
+            ) from original_exception
 
     def __create_bank_account_entity(self, request: CreateNewAccountRequest):
         try:

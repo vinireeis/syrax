@@ -9,8 +9,7 @@ from src.domain.enums.operations.enum import AccountOperationEnum
 
 
 @dataclass(slots=True)
-class TransactionDto:
-    transaction_id: int
+class MovementCashDto:
     account_id: UUID4
     amount: Decimal
     operation: AccountOperationEnum

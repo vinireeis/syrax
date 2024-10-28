@@ -70,7 +70,7 @@ class BankAccountsExtension(IBankAccountsExtension):
             payload = [
                 AccountPayload(
                     account_id=dto.account_id,
-                    balance_end_of_day=dto.balance,
+                    balance=dto.balance,
                     created_at=dto.created_at,
                 )
                 for dto in dtos

@@ -16,6 +16,11 @@ class UnableToRetrieveBankAccountsException(UseCaseUnexpectedException):
     _http_status_code = HTTPStatus.INTERNAL_SERVER_ERROR
 
 
+class UnableToRetrieveTransactionsException(UseCaseUnexpectedException):
+    _reason = UseCaseExceptionsReasonsEnum.UNABLE_TO_RETRIEVE_TRANSACTIONS_ERROR
+    _http_status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+
 class UnableToCreateNewAccountException(UseCaseUnexpectedException):
     _reason = UseCaseExceptionsReasonsEnum.UNABLE_TO_CREATE_BANK_ACCOUNT_ERROR
     _http_status_code = HTTPStatus.INTERNAL_SERVER_ERROR

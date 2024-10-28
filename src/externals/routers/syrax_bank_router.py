@@ -12,8 +12,8 @@ from src.use_cases.data_types.requests.bank_accounts.create_new_account_request 
 from src.use_cases.data_types.responses.bank_account.create_new_account_response import (
     CreateNewAccountResponse,
 )
-from src.use_cases.data_types.responses.bank_account.deposit_response import (
-    DepositResponse,
+from src.use_cases.data_types.responses.bank_account.movement_cash_response import (
+    MovementCashResponse,
 )
 from src.use_cases.data_types.responses.bank_account.get_balance_response import (
     GetBalanceResponse,
@@ -24,11 +24,8 @@ from src.use_cases.data_types.responses.bank_account.list_transactions_response 
 from src.use_cases.data_types.responses.bank_account.list_accounts_response import (
     ListAccountsResponse,
 )
-from src.use_cases.data_types.responses.bank_account.transfer_between_accounts_response import (
-    TransferBetweenAccountsResponse,
-)
-from src.use_cases.data_types.responses.bank_account.withdraw_response import (
-    WithdrawResponse,
+from src.use_cases.data_types.responses.bank_account.movement_cash_between_accounts_response import (
+    MovementCashBetweenAccountsResponse,
 )
 
 
@@ -71,11 +68,11 @@ class SyraxBankRouter(Router):
     @__syrax_bank_router.post(
         path="/{account_id}/deposit",
         response_model_exclude_none=True,
-        response_model=DepositResponse,
+        response_model=MovementCashResponse,
     )
     async def checking_account_deposit(
         account_id: UUID4, amount: float
-    ) -> DepositResponse:
+    ) -> MovementCashResponse:
 
         response = await BankAccountsAccountsController.checking_account_deposit(
             account_id=account_id, amount=amount
@@ -87,11 +84,11 @@ class SyraxBankRouter(Router):
     @__syrax_bank_router.post(
         path="/{account_id}/withdraw",
         response_model_exclude_none=True,
-        response_model=WithdrawResponse,
+        response_model=MovementCashResponse,
     )
     async def checking_account_withdraw(
         account_id: UUID4, amount: float
-    ) -> WithdrawResponse:
+    ) -> MovementCashResponse:
         response = await BankAccountsAccountsController.checking_account_withdraw(
             account_id=account_id, amount=amount
         )
@@ -102,11 +99,11 @@ class SyraxBankRouter(Router):
     @__syrax_bank_router.post(
         path="/{account_id}/transfer",
         response_model_exclude_none=True,
-        response_model=TransferBetweenAccountsResponse,
+        response_model=MovementCashBetweenAccountsResponse,
     )
     async def transfer_between_checking_account(
         account_id: UUID4, amount: float, beneficiary_account_id: UUID4
-    ) -> TransferBetweenAccountsResponse:
+    ) -> MovementCashBetweenAccountsResponse:
         response = await BankAccountsAccountsController.transfer_between_accounts(
             account_id=account_id,
             amount=amount,

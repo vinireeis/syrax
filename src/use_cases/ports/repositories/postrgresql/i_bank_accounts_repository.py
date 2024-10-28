@@ -29,5 +29,11 @@ class IBankAccountsRepository(ABC):
     @abstractmethod
     async def get_transactions_by_account_id(
         cls, account_id: UUID4
-    ) -> list[TransactionModel]:
+    ) -> list[TransactionModel | None]:
+        pass
+
+    @classmethod
+    async def insert_amount_by_account_id(
+        cls, account_id: UUID4, transaction_entity: TransactionEntity
+    ):
         pass
