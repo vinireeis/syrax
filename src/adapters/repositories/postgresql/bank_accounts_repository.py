@@ -50,11 +50,13 @@ class BankAccountsRepository(IBankAccountsRepository):
 
         async with cls.__postgresql_connection_pool.get_connection() as connection, connection.cursor() as cursor:
             cursor: AsyncCursor
-            query = SQL(obj="INSERT INTO Accounts (account_id) VALUES (%s)")
+            query = SQL(
+                obj="INSERT INTO Accounts (account_id, balance) VALUES (%s, %s)"
+            )
 
             prepared_statement = await cursor.execute(
                 query=query,
-                params=(bank_account_entity.account_id,),
+                params=(bank_account_entity.account_id, bank_account_entity.balance),
                 prepare=True,
             )
 
@@ -73,10 +75,11 @@ class BankAccountsRepository(IBankAccountsRepository):
 
             query = SQL(obj="SELECT * FROM Accounts")
             prepared_statement = await cursor.execute(query=query, prepare=True)
-
-            if result_list := await prepared_statement.fetchall():
-                bank_account_models = cls.__bank_accounts_extension.from_database_result_list_to_model_list(
+            result_list = await prepared_statement.fetchall()
+            bank_account_models = (
+                cls.__bank_accounts_extension.from_database_result_list_to_model_list(
                     result_list=result_list
                 )
+            )
 
-                return bank_account_models
+            return bank_account_models

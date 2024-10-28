@@ -42,7 +42,7 @@ class BankAccountsExtension(IBankAccountsExtension):
         try:
             bank_account_model = BankAccountDto(
                 account_id=model.account_id,
-                balance_end_of_day=model.balance_end_of_day,
+                balance=model.balance,
                 created_at=model.created_at,
             )
             return bank_account_model
@@ -70,7 +70,7 @@ class BankAccountsExtension(IBankAccountsExtension):
             payload = [
                 AccountPayload(
                     account_id=dto.account_id,
-                    balance_end_of_day=dto.balance_end_of_day,
+                    balance_end_of_day=dto.balance,
                     created_at=dto.created_at,
                 )
                 for dto in dtos

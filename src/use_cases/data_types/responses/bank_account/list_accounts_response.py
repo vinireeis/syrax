@@ -8,7 +8,7 @@ from src.use_cases.data_types.responses.base_api_response import BaseApiResponse
 
 class AccountPayload(BaseModel):
     account_id: UUID4
-    balance_end_of_day: Decimal = None
+    balance: Decimal = None
     created_at: datetime = None
 
 

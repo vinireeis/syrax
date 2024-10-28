@@ -6,10 +6,10 @@ from src.adapters.controllers import controller_error_handler
 from src.adapters.ports.controllers.i_bank_accounts_controller import (
     IBankAccountsController,
 )
-from src.use_cases.data_types.requests.checking_account.create_new_account_request import (
+from src.use_cases.data_types.requests.bank_accounts.create_new_account_request import (
     CreateNewAccountRequest,
 )
-from src.use_cases.data_types.requests.checking_account.deposit_request import (
+from src.use_cases.data_types.requests.bank_accounts.deposit_request import (
     TransferBetweenAccountsRequest,
 )
 from src.use_cases.data_types.responses.bank_account.create_new_account_response import (

@@ -11,7 +11,7 @@ from src.adapters.repositories.exceptions.repository_base_exception import (
 )
 from src.domain.entities.bank_account_entity import BankAccountEntity
 from src.use_cases.data_types.dtos.bank_account_dto import BankAccountDto
-from src.use_cases.data_types.requests.checking_account.create_new_account_request import (
+from src.use_cases.data_types.requests.bank_accounts.create_new_account_request import (
     CreateNewAccountRequest,
 )
 from src.use_cases.exceptions.use_case_exceptions import (

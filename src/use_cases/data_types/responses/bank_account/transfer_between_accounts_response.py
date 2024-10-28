@@ -10,7 +10,7 @@ class TransferBetweenAccountsPayload(BaseModel):
     from_account_id: UUID4
     amount: Decimal
     target_account_id: UUID4
-    transaction_datetime: datetime
+    transaction_datetime: datetime = None
 
 
 class TransferBetweenAccountsResponse(BaseApiResponse):

@@ -6,7 +6,7 @@ from starlette.routing import Router
 from src.adapters.controllers.bank_accounts_controller import (
     BankAccountsAccountsController,
 )
-from src.use_cases.data_types.requests.checking_account.create_new_account_request import (
+from src.use_cases.data_types.requests.bank_accounts.create_new_account_request import (
     CreateNewAccountRequest,
 )
 from src.use_cases.data_types.responses.bank_account.create_new_account_response import (
