@@ -1,6 +1,7 @@
 CREATE TABLE Accounts (
     account_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    balance_end_day DECIMAL(15, 2) NOT NULL DEFAULT 0
+    balance_end_day DECIMAL(15, 2) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Transactions (

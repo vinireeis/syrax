@@ -1,13 +1,13 @@
-FROM python:3.12
+FROM python:3.12-slim
 
 RUN pip install poetry
 
-WORKDIR ./
+WORKDIR /app
 
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml poetry.lock /app/
 
 RUN poetry install
 
-COPY . .
+COPY . /app
 
-CMD ["poetry", "run", "uvicorn", "python3", "main.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["poetry", "run", "python3", "main.py"]
