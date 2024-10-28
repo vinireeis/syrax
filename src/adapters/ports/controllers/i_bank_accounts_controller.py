@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 
 from pydantic import UUID4
 
+from src.use_cases.data_types.requests.checking_account.create_new_account_request import (
+    CreateNewAccountRequest,
+)
 from src.use_cases.data_types.responses.checking_account.create_new_account_response import (
     CreateNewAccountResponse,
 )
@@ -25,11 +28,13 @@ from src.use_cases.data_types.responses.checking_account.withdraw_response impor
 )
 
 
-class ISyraxBankController(ABC):
+class IBankAccountsController(ABC):
 
     @classmethod
     @abstractmethod
-    async def create_new_bank_account(cls, balance: float) -> CreateNewAccountResponse:
+    async def create_new_bank_account(
+        cls, request: CreateNewAccountRequest
+    ) -> CreateNewAccountResponse:
         pass
 
     @classmethod
@@ -53,8 +58,11 @@ class ISyraxBankController(ABC):
 
     @classmethod
     @abstractmethod
-    async def transfer_between_checking_account(
-        cls, account_id: UUID4, beneficiary_account_id: UUID4, amount: float
+    async def transfer_between_accounts(
+        cls,
+        account_id: UUID4,
+        amount: float,
+        beneficiary_account_id: UUID4,
     ) -> TransferBetweenAccountsResponse:
         pass
 

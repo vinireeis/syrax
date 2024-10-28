@@ -6,7 +6,7 @@ from src.use_cases.data_types.responses.base_api_response import BaseApiResponse
 
 
 class CreateNewAccountPayload(BaseModel):
-    beneficiary_account_id: uuid4
+    account_id: uuid4
 
 
 class CreateNewAccountResponse(BaseApiResponse):

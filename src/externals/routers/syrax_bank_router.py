@@ -3,7 +3,12 @@ from pydantic import UUID4
 from fastapi import APIRouter
 from starlette.routing import Router
 
-from src.adapters.controllers.syrax_bank_controller import SyraxBankController
+from src.adapters.controllers.bank_accounts_controller import (
+    BankAccountsAccountsController,
+)
+from src.use_cases.data_types.requests.checking_account.create_new_account_request import (
+    CreateNewAccountRequest,
+)
 from src.use_cases.data_types.responses.checking_account.create_new_account_response import (
     CreateNewAccountResponse,
 )
@@ -28,7 +33,7 @@ from src.use_cases.data_types.responses.checking_account.withdraw_response impor
 
 
 class SyraxBankRouter(Router):
-    __syrax_bank_router = APIRouter(prefix="/syrax/accounts")
+    __syrax_bank_router = APIRouter(prefix="/accounts", tags=["Checking account"])
 
     @staticmethod
     def get_routers() -> list[APIRouter]:
@@ -39,38 +44,40 @@ class SyraxBankRouter(Router):
     @staticmethod
     @__syrax_bank_router.post(
         path="",
-        tags=["Accounts"],
         response_model_exclude_none=True,
         response_model=CreateNewAccountResponse,
     )
-    async def create_new_bank_account(balance: float) -> CreateNewAccountResponse:
-        response = await SyraxBankController.create_new_bank_account(balance=balance)
+    async def create_new_bank_account(
+        request: CreateNewAccountRequest,
+    ) -> CreateNewAccountResponse:
+        response = await BankAccountsAccountsController.create_new_bank_account(
+            request=request
+        )
 
         return response
 
     @staticmethod
-    @__syrax_bank_router.post(
+    @__syrax_bank_router.get(
         path="",
-        tags=["Accounts"],
         response_model_exclude_none=True,
         response_model=ListAccountsResponse,
     )
     async def list_accounts() -> ListAccountsResponse:
-        response = await SyraxBankController.list_accounts()
+        response = await BankAccountsAccountsController.list_accounts()
 
         return response
 
     @staticmethod
     @__syrax_bank_router.post(
         path="/{account_id}/deposit",
-        tags=["Checking account"],
         response_model_exclude_none=True,
         response_model=DepositResponse,
     )
     async def checking_account_deposit(
         account_id: UUID4, amount: float
     ) -> DepositResponse:
-        response = await SyraxBankController.checking_account_deposit(
+
+        response = await BankAccountsAccountsController.checking_account_deposit(
             account_id=account_id, amount=amount
         )
 
@@ -79,14 +86,13 @@ class SyraxBankRouter(Router):
     @staticmethod
     @__syrax_bank_router.post(
         path="/{account_id}/withdraw",
-        tags=["Checking account"],
         response_model_exclude_none=True,
         response_model=WithdrawResponse,
     )
     async def checking_account_withdraw(
         account_id: UUID4, amount: float
     ) -> WithdrawResponse:
-        response = await SyraxBankController.checking_account_withdraw(
+        response = await BankAccountsAccountsController.checking_account_withdraw(
             account_id=account_id, amount=amount
         )
 
@@ -95,46 +101,43 @@ class SyraxBankRouter(Router):
     @staticmethod
     @__syrax_bank_router.post(
         path="/{account_id}/transfer",
-        tags=["Checking account"],
         response_model_exclude_none=True,
         response_model=TransferBetweenAccountsResponse,
     )
     async def transfer_between_checking_account(
-        account_id: UUID4, beneficiary_account_id: UUID4, amount: float
+        account_id: UUID4, amount: float, beneficiary_account_id: UUID4
     ) -> TransferBetweenAccountsResponse:
-        response = await SyraxBankController.transfer_between_checking_account(
-            beneficiary_account_id=beneficiary_account_id,
+        response = await BankAccountsAccountsController.transfer_between_accounts(
             account_id=account_id,
             amount=amount,
+            beneficiary_account_id=beneficiary_account_id,
         )
 
         return response
 
     @staticmethod
-    @__syrax_bank_router.post(
+    @__syrax_bank_router.get(
         path="/{account_id}/balance",
-        tags=["Checking account"],
         response_model_exclude_none=True,
         response_model=GetBalanceResponse,
     )
     async def get_balance(account_id: UUID4) -> GetBalanceResponse:
-        response = await SyraxBankController.get_balance(
+        response = await BankAccountsAccountsController.get_balance(
             account_id=account_id,
         )
 
         return response
 
     @staticmethod
-    @__syrax_bank_router.post(
+    @__syrax_bank_router.get(
         path="/{account_id}/transactions",
-        tags=["Checking account"],
         response_model_exclude_none=True,
         response_model=ListTransactionsByAccountResponse,
     )
     async def list_transactions_by_account(
         account_id: UUID4,
     ) -> ListTransactionsByAccountResponse:
-        response = await SyraxBankController.list_transactions_by_account(
+        response = await BankAccountsAccountsController.list_transactions_by_account(
             account_id=account_id,
         )
 
