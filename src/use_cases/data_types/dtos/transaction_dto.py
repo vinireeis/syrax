@@ -9,11 +9,11 @@ from src.domain.enums.operations.enum import AccountOperationsEnum
 
 
 @dataclass(slots=True)
-class BankAccountDto:
+class TransactionDto:
     transaction_id: UUID4
     account_id: UUID4
     amount: Decimal
     operation: AccountOperationsEnum
     cash_flow: CashFlowEnum
-    reference_id: UUID4
+    reference_id: UUID4 = None
     transaction_date: datetime = None

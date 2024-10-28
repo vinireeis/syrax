@@ -22,7 +22,7 @@ def repository_insertion_error_handler(function):
 
         except PostgresqlBaseInfrastructureException as original_exception:
             raise FailToInsertInformationException(
-                message="Error trying to insert data.",
+                message="Error trying to insert some data.",
                 original_error=original_exception,
             ) from original_exception
 
@@ -34,7 +34,7 @@ def repository_insertion_error_handler(function):
 
         except Exception as original_exception:
             raise RepositoryUnexpectedException(
-                message="Repository unexpected exception when trying to insert data.",
+                message="Unexpected error when trying to insert some data.",
                 original_error=original_exception,
             ) from original_exception
 
@@ -49,7 +49,7 @@ def repository_retrieving_error_handler(function):
 
         except PostgresqlBaseInfrastructureException as original_exception:
             raise FailToRetrieveInformationException(
-                message="Error trying to insert data.",
+                message="Error trying to retrieving some data.",
                 original_error=original_exception,
             ) from original_exception
 
@@ -61,7 +61,7 @@ def repository_retrieving_error_handler(function):
 
         except Exception as original_exception:
             raise FailToRetrieveInformationException(
-                message="Error trying to insert data.",
+                message="Unexpected error when trying to retrieving some data.",
                 original_error=original_exception,
             ) from original_exception
 

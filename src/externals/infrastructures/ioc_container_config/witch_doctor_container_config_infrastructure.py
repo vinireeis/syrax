@@ -6,6 +6,9 @@ from src.adapters.extensions.bank_accounts.bank_accounts_extension import (
 from src.adapters.extensions.bank_accounts.create_new_account_extension import (
     CreateNewAccountExtension,
 )
+from src.adapters.extensions.bank_accounts.transactions_extension import (
+    TransactionsExtension,
+)
 from src.adapters.ports.infrastructures.postgresql.i_postgresql_infrastructure import (
     IPostgresqlInfrastructure,
 )
@@ -18,15 +21,18 @@ from src.externals.infrastructures.postgre_sql.postgresql_infrastructure import 
 from src.externals.ports.infrastructures.i_ioc_container_config_infrastructure import (
     IIocContainerConfigInfrastructure,
 )
-from src.use_cases.bank_accounts.create_new_account_use_case import (
+from src.use_cases.create_new_account_use_case import (
     CreateNewAccountUseCase,
 )
-from src.use_cases.bank_accounts.list_accounts_use_case import ListAccountsUseCase
+from src.use_cases.list_accounts_use_case import ListAccountsUseCase
 from src.use_cases.ports.extensions.bank_accounts.i_bank_accounts_extension import (
     IBankAccountsExtension,
 )
 from src.use_cases.ports.extensions.bank_accounts.i_create_new_account_extension import (
     ICreateNewAccountExtension,
+)
+from src.use_cases.ports.extensions.bank_accounts.i_transactions_extension import (
+    ITransactionsExtension,
 )
 from src.use_cases.ports.repositories.postrgresql.i_bank_accounts_repository import (
     IBankAccountsRepository,
@@ -83,6 +89,11 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
         extensions_container(
             ICreateNewAccountExtension,
             CreateNewAccountExtension,
+            InjectionType.SINGLETON,
+        )
+        extensions_container(
+            ITransactionsExtension,
+            TransactionsExtension,
             InjectionType.SINGLETON,
         )
 

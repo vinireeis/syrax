@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from witch_doctor import WitchDoctor
 
 from src.adapters.extensions.exceptions.extension_exceptions import (
@@ -72,6 +74,28 @@ class CreateNewAccountUseCase(ICreateNewAccountUseCase):
         except RepositoryBaseException as original_exception:
             raise UnableToCreateNewAccountException(
                 message="Unable to insert new account in database.",
+                original_error=original_exception.original_error,
+            ) from original_exception
+
+    async def __insert_initial_balance_transaction(
+        self, bank_account_entity: BankAccountEntity
+    ):
+        try:
+            if bool(bank_account_entity.balance):
+
+                transaction_entity = (
+                    self.create_new_account_extension.create_transaction_entity(
+                        bank_account_entity=bank_account_entity
+                    )
+                )
+
+                await self.bank_accounts_repository.insert_new_transaction(
+                    transaction_entity=transaction_entity
+                )
+
+        except RepositoryBaseException as original_exception:
+            raise UnableToCreateNewAccountException(
+                message="Unable to insert initial transaction in database.",
                 original_error=original_exception.original_error,
             ) from original_exception
 

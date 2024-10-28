@@ -12,9 +12,9 @@ class TransactionEntity:
     def __init__(
         self,
         account_id: UUID4,
-        amount: float,
         operation: AccountOperationsEnum,
         cash_flow: CashFlowEnum,
+        amount: float,
         transaction_id: UUID4 = None,
         reference_id: UUID4 = None,
         transaction_datetime: datetime = None,
@@ -72,3 +72,14 @@ class TransactionEntity:
     def to_decimal(amount: float) -> Decimal:
         amount_formated = Decimal(amount).quantize(Decimal(config("DECIMAL_PRECISION")))
         return amount_formated
+
+    def _to_insert(self):
+        row_to_insert = {
+            "transaction_id": self.transaction_id,
+            "account_id": self.account_id,
+            "amount": self.amount,
+            "operation": self.operation,
+            "cash_flow": self.cash_flow,
+            "reference_id": self.reference_id,
+        }
+        return row_to_insert

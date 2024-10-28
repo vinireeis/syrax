@@ -18,6 +18,10 @@ class BankAccountEntity:
         return self.to_decimal(self.__balance)
 
     @property
+    def balance_float_type(self) -> float:
+        return self.__balance
+
+    @property
     def account_id(self) -> uuid4:
         return self.__account_id
 

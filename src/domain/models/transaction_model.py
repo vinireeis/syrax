@@ -15,6 +15,6 @@ class TransactionModel:
     amount: Decimal
     operation: AccountOperationsEnum
     cash_flow: CashFlowEnum
-    reference_id: UUID4
     created_at: datetime
+    reference_id: UUID4 = None
     transaction_date: datetime = None
