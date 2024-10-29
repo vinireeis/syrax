@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from pydantic import UUID4
 
 from fastapi import APIRouter
@@ -43,6 +45,7 @@ class SyraxBankRouter(Router):
         path="",
         response_model_exclude_none=True,
         response_model=CreateNewAccountResponse,
+        status_code=HTTPStatus.CREATED
     )
     async def create_new_bank_account(
         request: CreateNewAccountRequest,

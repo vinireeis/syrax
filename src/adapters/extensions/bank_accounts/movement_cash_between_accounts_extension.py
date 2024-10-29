@@ -99,6 +99,7 @@ class MovementCashBetweenAccountsExtension(IMovementCashBetweenAccountsExtension
                 operation=AccountOperationEnum.TRANSFER,
                 cash_flow=CashFlowEnum.CASH_OUT,
                 amount=request.amount,
+                target_account_id=request.target_account_id,
             )
             transaction_entity.generate_reference_id()
 
