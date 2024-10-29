@@ -3,7 +3,6 @@ from psycopg import AsyncCursor
 from psycopg.rows import dict_row
 from pydantic import UUID4
 from witch_doctor import WitchDoctor
-from psycopg.sql import SQL
 
 from src.adapters.ports.infrastructures.postgresql.i_postgresql_connection_pool import (
     IPostgresqlConnectionPool,

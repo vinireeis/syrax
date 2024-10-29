@@ -9,7 +9,6 @@ from src.adapters.repositories.exceptions.repository_exceptions import (
     ExtensionConversionException,
     FailToInsertInformationException,
     RepositoryUnexpectedException,
-    InvalidOperationInsufficientBalanceException,
 )
 from src.externals.infrastructures.postgre_sql.exceptions.postgresql_base_infrastructure_exception import (
     PostgresqlBaseInfrastructureException,

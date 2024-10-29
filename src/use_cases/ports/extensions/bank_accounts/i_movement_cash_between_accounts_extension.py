@@ -1,11 +1,8 @@
 from abc import abstractmethod, ABC
-from typing import Tuple
 
 from pydantic import UUID4
 
 from src.domain.entities.transaction_entity import TransactionEntity
-from src.domain.enums.cash_flow.enum import CashFlowEnum
-from src.domain.enums.operations.enum import AccountOperationEnum
 from src.use_cases.data_types.dtos.moviment_cash_dto import MovementCashDto
 from src.use_cases.data_types.requests.bank_accounts.movement_cash_between_accounts_request import (
     MovementCashBetweenAccountsRequest,
