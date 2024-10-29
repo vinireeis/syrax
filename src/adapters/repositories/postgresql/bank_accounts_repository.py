@@ -259,13 +259,18 @@ class BankAccountsRepository(IBankAccountsRepository):
                         prepare=True,
                     )
 
+                    if not f_update_prepared_statement.rowcount:
+                        raise InvalidOperationInsufficientBalanceException(
+                            message="Operation not permitted, insufficient balance."
+                        )
+
                     # cashin
                     target_account_amount_document = (
                         transaction_entity._amount_document_to_target_account()
                     )
                     await cursor.execute(
                         query=target_account_balance_query_lock,
-                        params=dict(account_id=transaction_entity.target_account_id),
+                        params=dict(target_account_id=transaction_entity.target_account_id),
                         prepare=True,
                     )
                     s_update_prepared_statement = await cursor.execute(
@@ -274,10 +279,6 @@ class BankAccountsRepository(IBankAccountsRepository):
                         prepare=True,
                     )
 
-                    if not f_update_prepared_statement.rowcount:
-                        raise InvalidOperationInsufficientBalanceException(
-                            message="Operation not permitted, insufficient balance."
-                        )
                     if not s_update_prepared_statement.rowcount:
                         raise FailToInsertInformationException(
                             message="Fail to deposit amount.",

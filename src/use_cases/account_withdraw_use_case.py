@@ -100,8 +100,6 @@ class AccountWithdrawUseCase(IAccountWithdrawUseCase):
             ) from original_exception
 
         except RepositoryBaseException as original_exception:
-            print(original_exception.original_error)
-            print(original_exception.__dict__)
             raise UnableToAccountWithdrawException(
                 message=original_exception.message,
                 original_error=original_exception.original_error,

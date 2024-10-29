@@ -23,6 +23,12 @@ services:
       - .:/src
     ports:
       - "8015:8015"
+    environment:
+      DECIMAL_PRECISION: "0.01"
+      CORS_ALLOWED_ORIGINS: "http://localhost:80,http://localhost:8080"
+      LOG_LEVEL: "10"
+      POSTGRES_STRING_CONNECTION: "postgresql://postgres:rootpassword@db:5432"
+      POSTGRES_DB: "bank_accounts"
     networks:
       - syrax_api_network
 

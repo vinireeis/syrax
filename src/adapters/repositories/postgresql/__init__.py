@@ -20,14 +20,8 @@ def repository_upsert_error_handler(function):
         try:
             return await function(*args, **kwargs)
 
-        except RepositoryBaseException as original_exception:
-            raise original_exception
-
         except PostgresqlBaseInfrastructureException as original_exception:
-            raise FailToInsertInformationException(
-                message="Error trying to insert some data.",
-                original_error=original_exception,
-            ) from original_exception
+            raise original_exception.original_error
 
         except ExtensionsBaseException as original_exception:
             raise ExtensionConversionException(
