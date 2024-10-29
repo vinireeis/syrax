@@ -1,0 +1,31 @@
+services:
+  db:    
+    image: postgres    
+    restart: always    
+    container_name: postgres-db
+    volumes:     
+      - ./init_db:/docker-entrypoint-initdb.d    
+    environment:      
+      POSTGRES_PASSWORD: "rootpassword"      
+      POSTGRES_USER: "postgres"      
+      POSTGRES_DB: "bank_accounts"
+    ports:      
+      - "5432:5432"    
+    networks:      
+      - syrax_api_network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: syrax-api
+    volumes:
+      - .:/src
+    ports:
+      - "8015:8015"
+    networks:
+      - syrax_api_network
+
+networks:
+  syrax_api_network:
+    driver: bridge
