@@ -21,7 +21,7 @@ from src.use_cases.ports.extensions.bank_accounts.i_bank_accounts_extension impo
 from src.use_cases.ports.repositories.postrgresql.i_bank_accounts_repository import (
     IBankAccountsRepository,
 )
-from src.use_cases.ports.use_cases.bank_accounts.i_list_accounts_use_case import (
+from src.use_cases.ports.use_cases.i_list_accounts_use_case import (
     IListAccountsUseCase,
 )
 

@@ -6,6 +6,9 @@ from src.adapters.extensions.bank_accounts.bank_accounts_extension import (
 from src.adapters.extensions.bank_accounts.create_new_account_extension import (
     CreateNewAccountExtension,
 )
+from src.adapters.extensions.bank_accounts.movement_cash_extension import (
+    MovementCashExtension,
+)
 from src.adapters.extensions.bank_accounts.transactions_extension import (
     TransactionsExtension,
 )
@@ -21,6 +24,8 @@ from src.externals.infrastructures.postgre_sql.postgresql_infrastructure import 
 from src.externals.ports.infrastructures.i_ioc_container_config_infrastructure import (
     IIocContainerConfigInfrastructure,
 )
+from src.use_cases.account_deposit_use_case import AccountDepositUseCase
+from src.use_cases.account_withdraw_use_case import AccountWithdrawUseCase
 from src.use_cases.create_new_account_use_case import (
     CreateNewAccountUseCase,
 )
@@ -34,19 +39,28 @@ from src.use_cases.ports.extensions.bank_accounts.i_bank_accounts_extension impo
 from src.use_cases.ports.extensions.bank_accounts.i_create_new_account_extension import (
     ICreateNewAccountExtension,
 )
+from src.use_cases.ports.extensions.bank_accounts.i_movement_cash_extension import (
+    IMovementCashExtension,
+)
 from src.use_cases.ports.extensions.bank_accounts.i_transactions_extension import (
     ITransactionsExtension,
 )
 from src.use_cases.ports.repositories.postrgresql.i_bank_accounts_repository import (
     IBankAccountsRepository,
 )
-from src.use_cases.ports.use_cases.bank_accounts.i_create_new_account_use_case import (
+from src.use_cases.ports.use_cases.i_account_deposit_use_case import (
+    IAccountDepositUseCase,
+)
+from src.use_cases.ports.use_cases.i_account_withdraw_use_case import (
+    IAccountWithdrawUseCase,
+)
+from src.use_cases.ports.use_cases.i_create_new_account_use_case import (
     ICreateNewAccountUseCase,
 )
-from src.use_cases.ports.use_cases.bank_accounts.i_list_accounts_use_case import (
+from src.use_cases.ports.use_cases.i_list_accounts_use_case import (
     IListAccountsUseCase,
 )
-from src.use_cases.ports.use_cases.bank_accounts.i_list_transactions_by_account_use_case import (
+from src.use_cases.ports.use_cases.i_list_transactions_by_account_use_case import (
     IListTransactionsByAccountUseCase,
 )
 
@@ -66,6 +80,12 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
             IListTransactionsByAccountUseCase,
             ListTransactionsByAccountUseCase,
             InjectionType.SINGLETON,
+        )
+        use_cases_container(
+            IAccountDepositUseCase, AccountDepositUseCase, InjectionType.SINGLETON
+        )
+        use_cases_container(
+            IAccountWithdrawUseCase, AccountWithdrawUseCase, InjectionType.SINGLETON
         )
 
         return use_cases_container
@@ -105,6 +125,11 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
         extensions_container(
             ITransactionsExtension,
             TransactionsExtension,
+            InjectionType.SINGLETON,
+        )
+        extensions_container(
+            IMovementCashExtension,
+            MovementCashExtension,
             InjectionType.SINGLETON,
         )
 

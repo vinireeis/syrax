@@ -2,12 +2,9 @@ from src.adapters.extensions.exceptions.extension_exceptions import (
     ExtensionsUnexpectedException,
 )
 from src.domain.models.transaction_model import TransactionModel
-from src.use_cases.data_types.dtos.bank_account_dto import BankAccountDto
 from src.use_cases.data_types.dtos.transaction_dto import TransactionDto
-from src.use_cases.data_types.responses.bank_account.base import BaseTransactionPayload
-from src.use_cases.data_types.responses.bank_account.list_accounts_response import (
-    ListAccountsResponse,
-    AccountPayload,
+from src.use_cases.data_types.responses.bank_account.base.base_payloads import (
+    BaseTransactionPayload,
 )
 from src.use_cases.data_types.responses.bank_account.list_transactions_response import (
     ListTransactionsByAccountResponse,

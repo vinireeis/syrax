@@ -1,10 +1,5 @@
-from decimal import Decimal
-
 from witch_doctor import WitchDoctor
 
-from src.adapters.extensions.exceptions.extension_exceptions import (
-    EntityCreationException,
-)
 from src.adapters.extensions.exceptions.extensions_base_exception import (
     ExtensionsBaseException,
 )
@@ -28,7 +23,7 @@ from src.use_cases.ports.extensions.bank_accounts.i_create_new_account_extension
 from src.use_cases.ports.repositories.postrgresql.i_bank_accounts_repository import (
     IBankAccountsRepository,
 )
-from src.use_cases.ports.use_cases.bank_accounts.i_create_new_account_use_case import (
+from src.use_cases.ports.use_cases.i_create_new_account_use_case import (
     ICreateNewAccountUseCase,
 )
 

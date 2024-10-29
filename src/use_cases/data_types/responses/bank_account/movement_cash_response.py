@@ -9,4 +9,4 @@ class MovementCashPayload(BaseMovementCashPayload):
 
 
 class MovementCashResponse(BaseApiResponse):
-    payload: None
+    payload: MovementCashPayload

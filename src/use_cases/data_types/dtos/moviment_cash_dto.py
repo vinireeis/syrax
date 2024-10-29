@@ -14,5 +14,6 @@ class MovementCashDto:
     amount: Decimal
     operation: AccountOperationEnum
     cash_flow: CashFlowEnum
+    target_account_id: UUID4 = None
     reference_id: UUID4 = None
     transaction_datetime: datetime = None

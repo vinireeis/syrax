@@ -24,3 +24,23 @@ class UnableToRetrieveTransactionsException(UseCaseUnexpectedException):
 class UnableToCreateNewAccountException(UseCaseUnexpectedException):
     _reason = UseCaseExceptionsReasonsEnum.UNABLE_TO_CREATE_BANK_ACCOUNT_ERROR
     _http_status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+class UnableToAccountDepositException(UseCaseUnexpectedException):
+    _reason = UseCaseExceptionsReasonsEnum.UNABLE_TO_ACCOUNT_DEPOSIT_ERROR
+    _http_status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+class UnableToAccountWithdrawException(UseCaseUnexpectedException):
+    _reason = UseCaseExceptionsReasonsEnum.UNABLE_TO_ACCOUNT_WITHDRAW_ERROR
+    _http_status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+class UnableToTransferBetweenAccountsException(UseCaseUnexpectedException):
+    _reason = UseCaseExceptionsReasonsEnum.UNABLE_TO_TRANSFER_BETWEEN_ACCOUNTS_ERROR
+    _http_status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+class InsufficientBalanceException(UseCaseUnexpectedException):
+    _reason = UseCaseExceptionsReasonsEnum.INSUFFICIENT_BALANCE_ERROR
+    _http_status_code = HTTPStatus.BAD_REQUEST

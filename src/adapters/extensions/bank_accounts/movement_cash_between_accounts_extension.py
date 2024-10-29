@@ -7,29 +7,31 @@ from src.domain.entities.transaction_entity import TransactionEntity
 from src.domain.enums.cash_flow.enum import CashFlowEnum
 from src.domain.enums.operations.enum import AccountOperationEnum
 from src.use_cases.data_types.dtos.moviment_cash_dto import MovementCashDto
-from src.use_cases.data_types.requests.bank_accounts.movement_cash_request import (
-    MovementCashRequest,
+from src.use_cases.data_types.requests.bank_accounts.movement_cash_between_accounts_request import (
+    MovementCashBetweenAccountsRequest,
 )
-from src.use_cases.data_types.responses.bank_account.movement_cash_response import (
-    MovementCashResponse,
-    MovementCashPayload,
+
+from src.use_cases.data_types.responses.bank_account.movement_cash_between_accounts_response import (
+    MovementCashBetweenAccountsResponse,
+    MovementCashBetweenAccountsPayload,
 )
-from src.use_cases.ports.extensions.bank_accounts.i_movement_cash_extension import (
-    IMovementCashExtension,
+from src.use_cases.ports.extensions.bank_accounts.i_movement_cash_between_accounts_extension import (
+    IMovementCashBetweenAccountsExtension,
 )
 
 
-class MovementCashExtension(IMovementCashExtension):
+class MovementCashBetweenAccountsExtension(IMovementCashBetweenAccountsExtension):
 
     @staticmethod
     def from_router_params_to_request(
-        account_id: UUID4, amount: float
-    ) -> MovementCashRequest:
+        account_id: UUID4, amount: float, target_account_id: UUID4
+    ) -> MovementCashBetweenAccountsRequest:
         try:
 
-            request = MovementCashRequest(
+            request = MovementCashBetweenAccountsRequest(
                 account_id=account_id,
                 amount=amount,
+                target_account_id=target_account_id,
             )
             return request
 
@@ -50,6 +52,7 @@ class MovementCashExtension(IMovementCashExtension):
                 amount=entity.amount,
                 operation=entity.operation,
                 cash_flow=entity.cash_flow,
+                target_account_id=entity.target_account_id,
             )
 
             return dto
@@ -61,15 +64,18 @@ class MovementCashExtension(IMovementCashExtension):
             ) from original_exception
 
     @staticmethod
-    def from_dto_to_response(dto: MovementCashDto) -> MovementCashResponse:
+    def from_dto_to_response(
+        dto: MovementCashDto,
+    ) -> MovementCashBetweenAccountsResponse:
         try:
-            payload = MovementCashPayload(
+            payload = MovementCashBetweenAccountsPayload(
                 account_id=dto.account_id,
                 amount=dto.amount,
                 operation=dto.operation.value,
+                target_account_id=dto.target_account_id,
             )
 
-            response = MovementCashResponse(
+            response = MovementCashBetweenAccountsResponse(
                 payload=payload,
                 status=True,
                 message=f"Operation successfully completed: {dto.operation.value}.",
@@ -85,17 +91,16 @@ class MovementCashExtension(IMovementCashExtension):
 
     @staticmethod
     def create_transaction_entity(
-        request: MovementCashRequest,
-        operation: AccountOperationEnum,
-        cash_flow: CashFlowEnum,
+        request: MovementCashBetweenAccountsRequest,
     ) -> TransactionEntity:
         try:
             transaction_entity = TransactionEntity(
                 account_id=request.account_id,
-                operation=operation,
-                cash_flow=cash_flow,
+                operation=AccountOperationEnum.TRANSFER,
+                cash_flow=CashFlowEnum.CASH_OUT,
                 amount=request.amount,
             )
+            transaction_entity.generate_reference_id()
 
             return transaction_entity
 

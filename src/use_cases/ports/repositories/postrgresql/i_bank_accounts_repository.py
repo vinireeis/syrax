@@ -27,13 +27,26 @@ class IBankAccountsRepository(ABC):
 
     @classmethod
     @abstractmethod
+    async def insert_transaction_between_accounts(
+        cls, transaction_entity: TransactionEntity
+    ):
+        pass
+
+    @classmethod
+    @abstractmethod
     async def get_transactions_by_account_id(
         cls, account_id: UUID4
     ) -> list[TransactionModel | None]:
         pass
 
     @classmethod
-    async def insert_amount_by_account_id(
-        cls, account_id: UUID4, transaction_entity: TransactionEntity
+    @abstractmethod
+    async def update_amount_by_account_id(cls, transaction_entity: TransactionEntity):
+        pass
+
+    @classmethod
+    @abstractmethod
+    async def update_amount_if_enough_balance(
+        cls, transaction_entity: TransactionEntity
     ):
         pass

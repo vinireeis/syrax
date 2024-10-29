@@ -1,5 +1,5 @@
 from decouple import config
-from psycopg import AsyncCursor, AsyncConnection
+from psycopg import AsyncCursor
 from psycopg.rows import dict_row
 from pydantic import UUID4
 from witch_doctor import WitchDoctor
@@ -13,9 +13,10 @@ from src.adapters.ports.infrastructures.postgresql.i_postgresql_infrastructure i
 )
 from src.adapters.repositories.exceptions.repository_exceptions import (
     FailToInsertInformationException,
+    InvalidOperationInsufficientBalanceException,
 )
 from src.adapters.repositories.postgresql import (
-    repository_insertion_error_handler,
+    repository_upsert_error_handler,
     repository_retrieving_error_handler,
 )
 from src.domain.entities.bank_account_entity import BankAccountEntity
@@ -57,7 +58,7 @@ class BankAccountsRepository(IBankAccountsRepository):
         BankAccountsRepository.__transactions_extension = transactions_extension
 
     @classmethod
-    @repository_insertion_error_handler
+    @repository_upsert_error_handler
     async def insert_new_account(cls, bank_account_entity: BankAccountEntity):
 
         async with cls.__postgresql_connection_pool.get_connection() as connection, connection.cursor(
@@ -102,7 +103,7 @@ class BankAccountsRepository(IBankAccountsRepository):
             return bank_account_models
 
     @classmethod
-    @repository_insertion_error_handler
+    @repository_upsert_error_handler
     async def insert_new_transaction(cls, transaction_entity: TransactionEntity):
         async with cls.__postgresql_connection_pool.get_connection() as connection, connection.cursor(
             row_factory=dict_row
@@ -127,6 +128,48 @@ class BankAccountsRepository(IBankAccountsRepository):
                 raise FailToInsertInformationException(
                     message="Fail to insert new transaction.",
                 )
+
+    @classmethod
+    @repository_upsert_error_handler
+    async def insert_transaction_between_accounts(
+        cls, transaction_entity: TransactionEntity
+    ):
+        async with cls.__postgresql_connection_pool.get_connection() as connection:
+            async with connection.transaction():
+                async with connection.cursor(row_factory=dict_row) as cursor:
+                    cursor: AsyncCursor
+                    cash_out_document = (
+                        transaction_entity._transaction_document_to_insert()
+                    )
+                    cash_in_document = (
+                        transaction_entity._transaction_document_to_target_account()
+                    )
+
+                    transaction_query = SQL(
+                        obj="""
+                            INSERT INTO Transactions (account_id, amount, operation, cash_flow, reference_id) 
+                            VALUES (%(account_id)s, %(amount)s, %(operation)s, %(cash_flow)s, %(reference_id)s)
+                                """
+                    )
+
+                    f_prepared_statement = await cursor.execute(
+                        query=transaction_query,
+                        params=cash_out_document,
+                        prepare=True,
+                    )
+                    s_prepared_statement = await cursor.execute(
+                        query=transaction_query,
+                        params=cash_in_document,
+                        prepare=True,
+                    )
+
+                    if (
+                        not f_prepared_statement.rowcount
+                        and not s_prepared_statement.rowcount
+                    ):
+                        raise FailToInsertInformationException(
+                            message="Fail to insert new transaction.",
+                        )
 
     @classmethod
     @repository_retrieving_error_handler
@@ -156,15 +199,14 @@ class BankAccountsRepository(IBankAccountsRepository):
 
     @classmethod
     @repository_retrieving_error_handler
-    async def insert_amount_by_account_id(
-        cls, account_id: UUID4, transaction_entity: TransactionEntity
-    ):
-        operator = transaction_entity.cash_flow_operator.value
+    async def update_amount_by_account_id(cls, transaction_entity: TransactionEntity):
         query_lock = SQL(
             """ SELECT balance FROM Accounts WHERE account_id = %(account_id)s FOR UPDATE """
         )
         query_update = SQL(
-            f""" UPDATE Accounts SET balance = balance {operator} %(amount)s WHERE account_id = %(account_id)s """
+            """ 
+            UPDATE Accounts SET balance = balance + %(amount)s WHERE account_id = %(account_id)s
+            """
         )
         amount_to_insert = transaction_entity._amount_document_to_insert()
 
@@ -174,7 +216,7 @@ class BankAccountsRepository(IBankAccountsRepository):
 
                     await cursor.execute(
                         query=query_lock,
-                        params=dict(account_id=account_id),
+                        params=dict(account_id=transaction_entity.account_id),
                         prepare=True,
                     )
                     update_prepared_statement = await cursor.execute(
@@ -184,4 +226,38 @@ class BankAccountsRepository(IBankAccountsRepository):
                     if not update_prepared_statement.rowcount:
                         raise FailToInsertInformationException(
                             message="Fail to insert new transaction.",
+                        )
+
+    @classmethod
+    @repository_upsert_error_handler
+    async def update_amount_if_enough_balance(
+        cls, transaction_entity: TransactionEntity
+    ):
+        query_lock = SQL(
+            """ SELECT balance FROM Accounts WHERE account_id = %(account_id)s FOR UPDATE """
+        )
+        query_update = SQL(
+            """ 
+            UPDATE Accounts SET balance = balance - %(amount)s WHERE account_id = %(account_id)s
+            AND balance - %(amount)s >= 0
+            """
+        )
+        amount_to_insert = transaction_entity._amount_document_to_insert()
+
+        async with cls.__postgresql_connection_pool.get_connection() as connection:
+            async with connection.transaction():
+                async with connection.cursor() as cursor:
+
+                    await cursor.execute(
+                        query=query_lock,
+                        params=dict(account_id=transaction_entity.account_id),
+                        prepare=True,
+                    )
+                    update_prepared_statement = await cursor.execute(
+                        query=query_update, params=amount_to_insert, prepare=True
+                    )
+
+                    if not update_prepared_statement.rowcount:
+                        raise InvalidOperationInsufficientBalanceException(
+                            message="Operation not permitted, insufficient balance."
                         )

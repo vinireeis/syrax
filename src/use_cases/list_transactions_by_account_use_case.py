@@ -22,7 +22,7 @@ from src.use_cases.ports.repositories.postrgresql.i_bank_accounts_repository imp
     IBankAccountsRepository,
 )
 
-from src.use_cases.ports.use_cases.bank_accounts.i_list_transactions_by_account_use_case import (
+from src.use_cases.ports.use_cases.i_list_transactions_by_account_use_case import (
     IListTransactionsByAccountUseCase,
 )
 

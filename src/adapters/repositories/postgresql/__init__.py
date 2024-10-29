@@ -1,23 +1,27 @@
 from src.adapters.extensions.exceptions.extensions_base_exception import (
     ExtensionsBaseException,
 )
+from src.adapters.repositories.exceptions.repository_base_exception import (
+    RepositoryBaseException,
+)
 from src.adapters.repositories.exceptions.repository_exceptions import (
     FailToRetrieveInformationException,
     ExtensionConversionException,
     FailToInsertInformationException,
     RepositoryUnexpectedException,
+    InvalidOperationInsufficientBalanceException,
 )
 from src.externals.infrastructures.postgre_sql.exceptions.postgresql_base_infrastructure_exception import (
     PostgresqlBaseInfrastructureException,
 )
 
 
-def repository_insertion_error_handler(function):
+def repository_upsert_error_handler(function):
     async def wrap(*args, **kwargs):
         try:
             return await function(*args, **kwargs)
 
-        except FailToInsertInformationException as original_exception:
+        except RepositoryBaseException as original_exception:
             raise original_exception
 
         except PostgresqlBaseInfrastructureException as original_exception:

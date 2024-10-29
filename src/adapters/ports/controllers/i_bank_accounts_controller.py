@@ -23,9 +23,6 @@ from src.use_cases.data_types.responses.bank_account.list_accounts_response impo
 from src.use_cases.data_types.responses.bank_account.movement_cash_between_accounts_response import (
     MovementCashBetweenAccountsResponse,
 )
-from src.use_cases.data_types.responses.bank_account.withdraw_response import (
-    WithdrawResponse,
-)
 
 
 class IBankAccountsController(ABC):
@@ -53,7 +50,7 @@ class IBankAccountsController(ABC):
     @abstractmethod
     async def checking_account_withdraw(
         cls, account_id: UUID4, amount: float
-    ) -> WithdrawResponse:
+    ) -> MovementCashResponse:
         pass
 
     @classmethod
