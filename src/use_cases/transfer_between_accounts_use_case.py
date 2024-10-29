@@ -94,7 +94,7 @@ class TransferBetweenAccountsUseCase(ITransferBetweenAccountsUseCase):
 
     async def __update_balance(self, transaction_entity: TransactionEntity):
         try:
-            await self.bank_accounts_repository.update_amount_if_enough_balance(
+            await self.bank_accounts_repository.update_amount_balance_between_accounts(
                 transaction_entity=transaction_entity
             )
         except InvalidOperationInsufficientBalanceException as original_exception:

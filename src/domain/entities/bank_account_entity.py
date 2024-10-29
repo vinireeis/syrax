@@ -34,3 +34,11 @@ class BankAccountEntity:
         account_id = uuid4()
         self.__account_id = account_id
         return self.__account_id
+
+    def new_account_document(self) -> dict:
+        document_to_insert = {
+            "account_id": self.__account_id,
+            "balance": self.__balance,
+        }
+
+        return document_to_insert

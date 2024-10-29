@@ -102,12 +102,12 @@ class SyraxBankRouter(Router):
         response_model=MovementCashBetweenAccountsResponse,
     )
     async def transfer_between_checking_account(
-        account_id: UUID4, amount: float, beneficiary_account_id: UUID4
+        account_id: UUID4, amount: float, target_account_id: UUID4
     ) -> MovementCashBetweenAccountsResponse:
         response = await BankAccountsAccountsController.transfer_between_accounts(
             account_id=account_id,
             amount=amount,
-            beneficiary_account_id=beneficiary_account_id,
+            target_account_id=target_account_id,
         )
 
         return response

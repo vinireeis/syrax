@@ -77,7 +77,7 @@ class TransactionEntity:
         amount_formated = Decimal(amount).quantize(Decimal(config("DECIMAL_PRECISION")))
         return amount_formated
 
-    def _transaction_document_to_insert(self):
+    def _transaction_document(self):
         row_to_insert = {
             "account_id": self.account_id,
             "amount": self.amount,
@@ -97,9 +97,16 @@ class TransactionEntity:
         }
         return row_to_insert
 
-    def _amount_document_to_insert(self):
+    def _amount_document(self):
         row_to_insert = {
             "account_id": self.account_id,
+            "amount": self.amount,
+        }
+        return row_to_insert
+
+    def _amount_document_to_target_account(self):
+        row_to_insert = {
+            "account_id": self.target_account_id,
             "amount": self.amount,
         }
         return row_to_insert

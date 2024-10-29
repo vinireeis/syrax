@@ -59,7 +59,7 @@ class IBankAccountsController(ABC):
         cls,
         account_id: UUID4,
         amount: float,
-        beneficiary_account_id: UUID4,
+        target_account_id: UUID4,
     ) -> MovementCashBetweenAccountsResponse:
         pass
 

@@ -87,7 +87,7 @@ class AccountDepositUseCase(IAccountDepositUseCase):
 
     async def __update_balance(self, transaction_entity: TransactionEntity):
         try:
-            await self.bank_accounts_repository.update_amount_by_account_id(
+            await self.bank_accounts_repository.deposit_amount_by_account_id(
                 transaction_entity=transaction_entity
             )
 

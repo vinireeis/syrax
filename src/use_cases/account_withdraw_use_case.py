@@ -91,7 +91,7 @@ class AccountWithdrawUseCase(IAccountWithdrawUseCase):
 
     async def __update_balance(self, transaction_entity: TransactionEntity):
         try:
-            await self.bank_accounts_repository.update_amount_if_enough_balance(
+            await self.bank_accounts_repository.withdraw_amount_by_account_id(
                 transaction_entity=transaction_entity
             )
         except InvalidOperationInsufficientBalanceException as original_exception:

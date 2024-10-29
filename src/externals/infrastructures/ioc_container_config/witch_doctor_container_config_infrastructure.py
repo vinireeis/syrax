@@ -6,6 +6,9 @@ from src.adapters.extensions.bank_accounts.bank_accounts_extension import (
 from src.adapters.extensions.bank_accounts.create_new_account_extension import (
     CreateNewAccountExtension,
 )
+from src.adapters.extensions.bank_accounts.movement_cash_between_accounts_extension import (
+    MovementCashBetweenAccountsExtension,
+)
 from src.adapters.extensions.bank_accounts.movement_cash_extension import (
     MovementCashExtension,
 )
@@ -39,6 +42,9 @@ from src.use_cases.ports.extensions.bank_accounts.i_bank_accounts_extension impo
 from src.use_cases.ports.extensions.bank_accounts.i_create_new_account_extension import (
     ICreateNewAccountExtension,
 )
+from src.use_cases.ports.extensions.bank_accounts.i_movement_cash_between_accounts_extension import (
+    IMovementCashBetweenAccountsExtension,
+)
 from src.use_cases.ports.extensions.bank_accounts.i_movement_cash_extension import (
     IMovementCashExtension,
 )
@@ -63,6 +69,12 @@ from src.use_cases.ports.use_cases.i_list_accounts_use_case import (
 from src.use_cases.ports.use_cases.i_list_transactions_by_account_use_case import (
     IListTransactionsByAccountUseCase,
 )
+from src.use_cases.ports.use_cases.i_transfer_between_accounts_use_case import (
+    ITransferBetweenAccountsUseCase,
+)
+from src.use_cases.transfer_between_accounts_use_case import (
+    TransferBetweenAccountsUseCase,
+)
 
 
 class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure):
@@ -86,6 +98,11 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
         )
         use_cases_container(
             IAccountWithdrawUseCase, AccountWithdrawUseCase, InjectionType.SINGLETON
+        )
+        use_cases_container(
+            ITransferBetweenAccountsUseCase,
+            TransferBetweenAccountsUseCase,
+            InjectionType.SINGLETON,
         )
 
         return use_cases_container
@@ -130,6 +147,11 @@ class WitchDoctorContainerConfigInfrastructure(IIocContainerConfigInfrastructure
         extensions_container(
             IMovementCashExtension,
             MovementCashExtension,
+            InjectionType.SINGLETON,
+        )
+        extensions_container(
+            IMovementCashBetweenAccountsExtension,
+            MovementCashBetweenAccountsExtension,
             InjectionType.SINGLETON,
         )
 
