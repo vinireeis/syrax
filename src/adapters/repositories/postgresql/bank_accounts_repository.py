@@ -270,7 +270,9 @@ class BankAccountsRepository(IBankAccountsRepository):
                     )
                     await cursor.execute(
                         query=target_account_balance_query_lock,
-                        params=dict(target_account_id=transaction_entity.target_account_id),
+                        params=dict(
+                            target_account_id=transaction_entity.target_account_id
+                        ),
                         prepare=True,
                     )
                     s_update_prepared_statement = await cursor.execute(

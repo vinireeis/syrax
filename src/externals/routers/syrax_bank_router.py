@@ -17,9 +17,6 @@ from src.use_cases.data_types.responses.bank_account.create_new_account_response
 from src.use_cases.data_types.responses.bank_account.movement_cash_response import (
     MovementCashResponse,
 )
-from src.use_cases.data_types.responses.bank_account.get_balance_response import (
-    GetBalanceResponse,
-)
 from src.use_cases.data_types.responses.bank_account.list_transactions_response import (
     ListTransactionsByAccountResponse,
 )
@@ -45,7 +42,7 @@ class SyraxBankRouter(Router):
         path="",
         response_model_exclude_none=True,
         response_model=CreateNewAccountResponse,
-        status_code=HTTPStatus.CREATED
+        status_code=HTTPStatus.CREATED,
     )
     async def create_new_bank_account(
         request: CreateNewAccountRequest,
@@ -111,19 +108,6 @@ class SyraxBankRouter(Router):
             account_id=account_id,
             amount=amount,
             target_account_id=target_account_id,
-        )
-
-        return response
-
-    @staticmethod
-    @__syrax_bank_router.get(
-        path="/{account_id}/balance",
-        response_model_exclude_none=True,
-        response_model=GetBalanceResponse,
-    )
-    async def get_balance(account_id: UUID4) -> GetBalanceResponse:
-        response = await BankAccountsAccountsController.get_balance(
-            account_id=account_id,
         )
 
         return response

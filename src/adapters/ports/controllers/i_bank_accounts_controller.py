@@ -11,9 +11,6 @@ from src.use_cases.data_types.responses.bank_account.create_new_account_response
 from src.use_cases.data_types.responses.bank_account.movement_cash_response import (
     MovementCashResponse,
 )
-from src.use_cases.data_types.responses.bank_account.get_balance_response import (
-    GetBalanceResponse,
-)
 from src.use_cases.data_types.responses.bank_account.list_transactions_response import (
     ListTransactionsByAccountResponse,
 )
@@ -61,11 +58,6 @@ class IBankAccountsController(ABC):
         amount: float,
         target_account_id: UUID4,
     ) -> MovementCashBetweenAccountsResponse:
-        pass
-
-    @classmethod
-    @abstractmethod
-    async def get_balance(cls, account_id: UUID4) -> GetBalanceResponse:
         pass
 
     @classmethod

@@ -15,5 +15,9 @@ CREATE TABLE Transactions (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO ACCOUNTS (account_id) values ('46f793c8-78ad-48ce-98ab-1aa09b5cc0d2');
+INSERT INTO ACCOUNTS (account_id) values ('84123974-58c1-44b8-a69a-c9086d87e765');
+INSERT INTO ACCOUNTS (account_id) values ('4dd6889d-cf50-43a9-a0bd-bec0582f7483');
+
 CREATE INDEX idx_account_id ON Transactions (account_id);
 CREATE INDEX idx_reference_id ON Transactions (reference_id);

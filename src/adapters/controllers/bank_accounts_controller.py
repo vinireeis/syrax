@@ -14,9 +14,6 @@ from src.use_cases.data_types.responses.bank_account.create_new_account_response
 from src.use_cases.data_types.responses.bank_account.movement_cash_response import (
     MovementCashResponse,
 )
-from src.use_cases.data_types.responses.bank_account.get_balance_response import (
-    GetBalanceResponse,
-)
 from src.use_cases.data_types.responses.bank_account.list_accounts_response import (
     ListAccountsResponse,
 )
@@ -161,22 +158,6 @@ class BankAccountsAccountsController(IBankAccountsController):
         response = movement_cash_between_accounts_extension.from_dto_to_response(
             dto=dto
         )
-
-        return response
-
-    @classmethod
-    @controller_error_handler
-    @WitchDoctor.injection
-    async def get_balance(cls, account_id: UUID4) -> GetBalanceResponse:
-        request = get_balance_extension.from_router_request_to_request(
-            balance=balance,
-        )
-
-        use_case_response = await get_balance_use_case.get_shortlist_by_company_id_and_job_opportunity_id(
-            request=request
-        )
-
-        response = get_balance_extension.from_dto_to_response(dto=use_case_response)
 
         return response
 
