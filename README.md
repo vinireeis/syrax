@@ -250,3 +250,46 @@ O valor pode ser zero.
 - Erro lançado quando uma condição inesperada acontece no servidor.
 
 ---
+
+### Rodando script concurrency asyncio referente a tabela verdade do desafio. (Essa etapa pode ser feita utilizando o pip e uma env padrão, caso prefira)
+Lembre-se de estar no diretório raiz do projeto.
+
+Com o poetry instalado, ative a virtual env.
+`poetry shell`
+
+### Agora adcione o httpx.
+`poetry add httpx`
+
+### Rode o script com o seguinte comando:
+`python3 scripts/concurrency_asyncio.py`
+
+Deverá ver algo parecido com isso no terminal
+~~~bash
+{'status': True, 'message': 'Operation successfully completed: deposit.', 'payload': {'amount': '100.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'deposit'}}
+84123974-58c1-44b8-a69a-c9086d87e765 0.00
+4dd6889d-cf50-43a9-a0bd-bec0582f7483 0.00
+46f793c8-78ad-48ce-98ab-1aa09b5cc0d2 100.00
+{'status': True, 'message': 'Operation successfully completed: withdraw.', 'payload': {'amount': '50.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'withdraw'}}
+84123974-58c1-44b8-a69a-c9086d87e765 0.00
+4dd6889d-cf50-43a9-a0bd-bec0582f7483 0.00
+46f793c8-78ad-48ce-98ab-1aa09b5cc0d2 50.00
+{'status': True, 'message': 'Operation successfully completed: transfer.', 'payload': {'amount': '30.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'transfer', 'target_account_id': '84123974-58c1-44b8-a69a-c9086d87e765'}}
+4dd6889d-cf50-43a9-a0bd-bec0582f7483 0.00
+46f793c8-78ad-48ce-98ab-1aa09b5cc0d2 20.00
+84123974-58c1-44b8-a69a-c9086d87e765 30.00
+{'status': True, 'message': 'Operation successfully completed: deposit.', 'payload': {'amount': '50.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'deposit'}}
+{'status': True, 'message': 'Operation successfully completed: withdraw.', 'payload': {'amount': '30.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'withdraw'}}
+4dd6889d-cf50-43a9-a0bd-bec0582f7483 0.00
+84123974-58c1-44b8-a69a-c9086d87e765 30.00
+46f793c8-78ad-48ce-98ab-1aa09b5cc0d2 40.00
+{'status': True, 'message': 'Operation successfully completed: deposit.', 'payload': {'amount': '100.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'deposit'}}
+{'status': True, 'message': 'Operation successfully completed: transfer.', 'payload': {'amount': '50.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'transfer', 'target_account_id': '84123974-58c1-44b8-a69a-c9086d87e765'}}
+4dd6889d-cf50-43a9-a0bd-bec0582f7483 0.00
+46f793c8-78ad-48ce-98ab-1aa09b5cc0d2 90.00
+84123974-58c1-44b8-a69a-c9086d87e765 80.00
+{'status': True, 'message': 'Operation successfully completed: transfer.', 'payload': {'amount': '10.00', 'account_id': '84123974-58c1-44b8-a69a-c9086d87e765', 'operation': 'transfer', 'target_account_id': '4dd6889d-cf50-43a9-a0bd-bec0582f7483'}}
+{'status': True, 'message': 'Operation successfully completed: transfer.', 'payload': {'amount': '20.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'transfer', 'target_account_id': '84123974-58c1-44b8-a69a-c9086d87e765'}}
+46f793c8-78ad-48ce-98ab-1aa09b5cc0d2 70.00
+4dd6889d-cf50-43a9-a0bd-bec0582f7483 10.00
+84123974-58c1-44b8-a69a-c9086d87e765 90.00
+~~~~
