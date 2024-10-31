@@ -251,19 +251,18 @@ O valor pode ser zero.
 
 ---
 
-### Rodando script concurrency asyncio referente a tabela verdade do desafio. (Essa etapa pode ser feita utilizando o pip e uma env padrão, caso prefira)
-Lembre-se de estar no diretório raiz do projeto.
+### Rodando script concurrency asyncio que simula as operações da "tabela verdade" do desafio. 
+#### Lembre-se de estar no diretório raiz do projeto e com a virtual env ativada. Essa etapa pode ser feita utilizando o pip e uma env padrão, caso prefira.
 
-Com o poetry instalado, ative a virtual env.
-`poetry shell`
+Com o poetry instalado, ative a virtual env com o comando: `poetry shell`
 
-### Agora adcione o httpx.
-`poetry add httpx`
+Agora adcione o httpx: `poetry add httpx`
 
-### Rode o script com o seguinte comando:
-`python3 scripts/concurrency_asyncio.py`
 
-Deverá ver algo parecido com isso no terminal
+
+Rode o script com o seguinte comando: `python3 scripts/concurrency_asyncio.py`
+
+Deverá ver algo parecido com isso no terminal:
 ~~~bash
 {'status': True, 'message': 'Operation successfully completed: deposit.', 'payload': {'amount': '100.00', 'account_id': '46f793c8-78ad-48ce-98ab-1aa09b5cc0d2', 'operation': 'deposit'}}
 84123974-58c1-44b8-a69a-c9086d87e765 0.00
